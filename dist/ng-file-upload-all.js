@@ -613,7 +613,7 @@ define(['angular'], function (angular) {
         if (promise['finally'] && promise['finally'] instanceof Function) {
           promise['finally'](function () {
             upload.promisesCount--;
-          });
+          }).then(angular.noop, angular.noop);
         }
         return promise;
       }
