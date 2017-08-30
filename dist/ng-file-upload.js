@@ -1989,7 +1989,7 @@ ngFileUpload.service('UploadResize', ['UploadValidate', '$q', function (UploadVa
       } catch (e) {/* Fix IE11 that throw error calling getData */
       }
       extractFiles(source.items, source.files, attrGetter('ngfAllowDir', scope) !== false,
-        attrGetter('multiple') || attrGetter('ngfMultiple', scope)).then(function (files) {
+        attrGetter('multiple') || attrGetter('ngfMultiple', scope), attrGetter('ngfValidateMultiple')).then(function (files) {
         if (files.length) {
           updateModel(files, evt);
         } else {
@@ -2055,7 +2055,7 @@ ngFileUpload.service('UploadResize', ['UploadValidate', '$q', function (UploadVa
       callback(dClass);
     }
 
-    function extractFiles(items, fileList, allowDir, multiple) {
+    function extractFiles(items, fileList, allowDir, multiple, validateMultiple) {
       var maxFiles = upload.getValidationAttr(attr, scope, 'maxFiles');
       if (maxFiles == null) {
         maxFiles = Number.MAX_VALUE;
@@ -2145,8 +2145,19 @@ ngFileUpload.service('UploadResize', ['UploadValidate', '$q', function (UploadVa
               totalSize += f.size;
             }
           }
-          if (files.length > maxFiles || totalSize > maxTotalSize ||
-            (!multiple && files.length > 0)) break;
+
+          if (files.length > maxFiles || (!multiple && files.length > 0)) {
+            // Model validity is set here because the additional files are dropped and not sent to the model.
+            if (validateMultiple) {
+              ngModel.$setValidity('tooManyFiles', false);
+            }
+
+            break;
+          }
+
+          if (totalSize > maxTotalSize) {
+            break;
+          }
         }
       } else {
         if (fileList != null) {
@@ -2156,8 +2167,19 @@ ngFileUpload.service('UploadResize', ['UploadValidate', '$q', function (UploadVa
               files.push(file);
               totalSize += file.size;
             }
-            if (files.length > maxFiles || totalSize > maxTotalSize ||
-              (!multiple && files.length > 0)) break;
+
+            if (files.length > maxFiles || (!multiple && files.length > 0)) {
+              // Model validity is set here because the additional files are dropped and not sent to the model.
+              if (validateMultiple) {
+                ngModel.$setValidity('tooManyFiles', false);
+              }
+              
+              break;
+            }
+
+            if (totalSize > maxTotalSize) {
+              break;
+            }
           }
         }
       }

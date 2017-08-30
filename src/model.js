@@ -16,7 +16,7 @@ ngFileUpload.service('Upload', ['$parse', '$timeout', '$compile', '$q', 'UploadE
           return $parse(attrVal)(scope);
         }
       } catch (e) {
-        // hangle string value without single qoute
+        // Handle string value without single quote
         if (name.search(/min|max|pattern/i)) {
           return attrVal;
         } else {
