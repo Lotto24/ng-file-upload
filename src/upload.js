@@ -1,5 +1,5 @@
 /**!
- * AngularJS file upload directives and services. Supoorts: file upload/drop/paste, resume, cancel/abort,
+ * AngularJS file upload directives and services. Supports: file upload/drop/paste, resume, cancel/abort,
  * progress, resize, thumbnail, preview, validation and CORS
  * @author  Danial  <danial.farid@gmail.com>
  * @version <%= pkg.version %>
